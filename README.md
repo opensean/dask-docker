@@ -42,3 +42,66 @@ docker-compose build
 # Just build one image e.g. notebook
 docker-compose build notebook
 ```
+
+
+## Building IgBLAST enabled worker
+
+Contributers: 
+
+- https://bitbucket.org/kenneym/
+- https://github.com/opensean/
+
+The ```base/Dockerfile``` had been modified to retrieve and setup NCBI IgBLAST.
+It is available in the ```/opt/ncbi-igblast-1.14.0``` directory.
+Germiline databases must be retrieved from either NCBI  
+(https://ftp.ncbi.nih.gov/blast/executables/igblast/release/database/) or 
+IMGT (http://www.imgt.org/vquest/refseqh.html#VQUEST).  The following 
+example describes the process for building the V, D, and J gene 
+germline databases for rabbit from IMGT.
+
+```
+mkdir base/database/rabbit/imgt2019
+
+cd base/database/rabbit/imgt2019
+
+vim IGXV
+
+```
+
+- Now, go to http://www.imgt.org/vquest/refseqh.html#VQUEST
+
+- Scroll down to IMGT/V-QUEST reference directory sets per taxon:
+
+- Click on IGHV under Orycctolagus cuniculus (rabbit)
+
+- Copy all of the genetic information, starting at the first `>` sign
+
+- Now, re-enter your vim session:
+  
+```"+p``` or, whatever way of pasting from clipboard you best prefer
+
+- Feel free to add other V gene lines from rabbit, for instance, by copying IGLV as well.
+
+- Place this imgt file into the correct format using the edit_imgt_file script:
+  
+```/opt/ncbi-igblast-1.14.0/bin/edit_imgt_file.pl IGXV```
+
+- Create the database now, using:
+
+```makeblastdb -parse_seqids -dbtype nucl -in IGXV```
+
+- The output to stdout should look something like this:
+
+- In the same directory, reproduce the same exact process for the J and D genes for the rabbit; for example, to build the j-gene database, you should stay where you are in the rabbit directory, go back to the imgt site, click on the IGLJ or IGHJ sequences, copy and paste them into a file, run the edit_imgt_file script, and then run makedb. At the end of creating all V, J, and H databases, you will have filled the rabbit directory with tons of files, some prefaced IGXV, some prefaced with IGHD, and some with IGXJ. You are now ready to run igblast.
+
+
+References:
+
+Lefranc, M.-P. and Lefranc, G. The Immunoglobulin FactsBook Academic Press, London, UK (458 pages), (2001)
+
+Lefranc, M.-P. and Lefranc, G. The T cell receptor FactsBook Academic Press, London, UK (398 pages), (2001) 
+
+Ye, J., Ma, N., Madden, T. L., & Ostell, J. M. (2013). IgBLAST: An immunoglobulin variable domain sequence analysis tool. Nucleic Acids Research, 41(Web Server issue), W34–W40. https://doi.org/10.1093/nar/gkt382
+
+
+
