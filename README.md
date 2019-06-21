@@ -64,7 +64,7 @@ mkdir base/database/rabbit/imgt2019
 
 cd base/database/rabbit/imgt2019
 
-vim IGXV
+vim IGXV.fa
 
 ```
 
@@ -84,13 +84,23 @@ vim IGXV
 
 - Place this imgt file into the correct format using the edit_imgt_file script:
   
-```/opt/ncbi-igblast-1.14.0/bin/edit_imgt_file.pl IGXV```
+```/opt/ncbi-igblast-1.14.0/bin/edit_imgt_file.pl IGXV.fa > IGXV```
 
 - Create the database now, using:
 
-```makeblastdb -parse_seqids -dbtype nucl -in IGXV```
+```/opt/ncbi-igblast-1.14.0/bin/makeblastdb -parse_seqids -dbtype nucl -in IGXV```
 
 - The output to stdout should look something like this:
+
+    Building a new DB, current time: 06/21/2019 13:44:41
+    New DB name:   dask-docker/base/databases/rabbit/imgt2019/IGXV
+    New DB title:  base/databases/rabbit/imgt2019/IGXV
+    Sequence type: Nucleotide
+    Keep MBits: T
+    Maximum file size: 1000000000B
+    Adding sequences from FASTA; added 148 sequences in 0.0136719 seconds.
+
+
 
 - In the same directory, reproduce the same exact process for the J and D genes for the rabbit; for example, to build the j-gene database, you should stay where you are in the rabbit directory, go back to the imgt site, click on the IGLJ or IGHJ sequences, copy and paste them into a file, run the edit_imgt_file script, and then run makedb. At the end of creating all V, J, and H databases, you will have filled the rabbit directory with tons of files, some prefaced IGXV, some prefaced with IGHD, and some with IGXJ. You are now ready to run igblast.
 
