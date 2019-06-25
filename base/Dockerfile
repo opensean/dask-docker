@@ -1,7 +1,12 @@
 FROM continuumio/miniconda3:4.6.14
-ENV PATH="/opt/ncbi-igblast-1.14.0/bin:${PATH}"
+ENV PATH="${PATH}:/opt/ncbi-igblast-1.14.0/bin"
 
-RUN conda install --yes --freeze-installed \
+##libxml2 require for igblastn
+
+RUN apt-get update \
+    && apt-get install -y libxml2 \
+    && apt-get clean \
+    && conda install --yes --freeze-installed \
     -c conda-forge \
     python-blosc \
     cytoolz \
